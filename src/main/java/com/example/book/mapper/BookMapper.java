@@ -10,12 +10,6 @@ import java.util.Map;
 @Mapper
 public interface BookMapper {
     /**
-     *更新书籍信息
-     * @param book 书籍信息
-     * @return 没有返回值
-     */
-
-    /**
      *增加书籍
      * @param book 书籍信息
      * @return 没有返回值
@@ -64,5 +58,10 @@ public interface BookMapper {
      */
     Book selectById(Integer id);
 
+    /**
+     *更新书籍信息
+     * @param book 书籍信息
+     * @return 没有返回值
+     */
     void update(Book book);
 }

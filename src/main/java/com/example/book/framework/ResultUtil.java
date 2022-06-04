@@ -9,11 +9,11 @@ public class ResultUtil {
     }
 
     public static <T> Result<T> ok(){
-        return new Result<>(ErrorStatus.OK);
+        return new Result(ErrorStatus.OK);
     }
 
     public static <T> Result<T> ok(T data){
-        return new Result<>(ErrorStatus.OK.getCode(), ErrorStatus.OK.getMessage(), data);
+        return new Result(ErrorStatus.OK.getCode(), ErrorStatus.OK.getMessage(), data);
     }
 
     public static <T> Result<T> fail(){
@@ -37,7 +37,7 @@ public class ResultUtil {
     }
 
     public static <T> Result<T> fail(int code ,String message, T data){
-        return new Result<>(code, message, data).fail();
+        return new Result(code, message, data).fail();
     }
 
     public static <T> Result<T> notfound(){

@@ -51,7 +51,7 @@ public class ReaderController {
     @GetMapping("/list")
     public ResultBean<List<Reader>> list(){
         List<Reader> entities = readerService.getList(null);
-        return new ResultBean<>(0, "查询成功", entities.size(), entities);
+        return new ResultBean(0, "查询成功", entities.size(), entities);
     }
 
     @GetMapping("/getPageResult")
@@ -59,7 +59,7 @@ public class ReaderController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer limit) {
 
-        Map<String, Object> param = new HashMap<>(16);
+        Map<String, Object> param = new HashMap(16);
         // 统计记录数
         int totalRows = readerService.count(param);
         // 计算起始行号
@@ -72,7 +72,7 @@ public class ReaderController {
         // 获取当前页结果集
         List<Reader> entities = readerService.getPageResult(param);
 
-        return new ResultBean<>(0, "查询成功", totalRows, entities);
+        return new ResultBean(0, "查询成功", totalRows, entities);
 
     }
 }

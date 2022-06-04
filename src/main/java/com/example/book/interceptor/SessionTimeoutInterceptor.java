@@ -21,7 +21,7 @@ public class SessionTimeoutInterceptor implements HandlerInterceptor {
         // session过期
         if(loginUser == null){
             // 通过接口跳转登录页面
-            response.sendRedirect("/login");
+            request.getRequestDispatcher("/login").forward(request,response);
             return false;
         }else{
             return true;

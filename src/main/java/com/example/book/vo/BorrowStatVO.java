@@ -10,7 +10,7 @@ import java.util.List;
  * 是存活在业务层的，是业务逻辑使用的
  */
 @Data
-public class BorrowStatVO {
+public class  BorrowStatVO {
     private String name;
     private String type;
     private List<Integer> data;

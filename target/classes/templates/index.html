@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>图书检索</title>
-
-    <link rel="stylesheet" href="/static/layui/css/layui.css" th:href="@{/static/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
 
     <style type="text/css">
         .main {
@@ -23,7 +22,6 @@
             font-size: 28px;
             font-weight: 300;
         }
-
 
 
         .input-opt {
@@ -56,7 +54,7 @@
 
         .items .itemtitle {
             margin-bottom: 30px;
-            vertical-align: left;
+            vertical-align: auto;
             font-size: 16px;
             font-weight: normal;
         }
@@ -81,8 +79,12 @@
     </style>
 </head>
 <body>
+<div align="right">
+    <button class="layui-btn layui-btn-primary layui-border-blue" onclick="admin()">管理员</button>
+</div>
 <div class="main">
-    <h1 class="site-h1"><img src="static/img/ircon.jpg" width="100" height="60" /></i> 图 书 检 索</h1>
+
+    <h1 class="site-h1"><img th:src="@{/img/ircon.jpg}" width="100" height="60"/></i> 图 书 检 索</h1>
     <form class="layui-form">
         <div class="layui-form-item">
             <div class="input-opt">
@@ -113,21 +115,32 @@
     </div>
 </div>
 
-<script src="/static/js/jquery-1.11.3.min.js" th:src="@{/static/js/jquery-1.11.3.min.js}"></script>
-<script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
-<script th:src="@{/static/js/util.js}"></script>
+<script th:src="@{/js/jquery-1.11.3.min.js}"></script>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/js/util.js}"></script>
 
 <!--ctx-->
 <script th:replace="~{fragment::ctx}"/>
 
 <script>
-    var form, laypage;
+
     // 请求参数
     var param = {};
 
-    layui.use(['form','laypage','jquery'], function () {
-        form = layui.form;
-        laypage = layui.laypage, $ = layui.$;
+    function admin() {
+        layer.msg('是否要进入管理员页面', {
+            time: 0 //不自动关闭
+            , btn: ['确定', '关闭']
+            , yes: function (index) {
+                layer.close(index);
+                top.location = "/login";
+            }
+        });
+    };
+
+    layui.use(['form', 'laypage', 'jquery'], function () {
+        var form = layui.form
+            , laypage = layui.laypage, $ = layui.$;
 
         //监听提交
         form.on('submit(formDemo)', function (data) {
@@ -145,87 +158,88 @@
                 param.author = data.field.keyword;
             }
 
-            showRecord(1,5,param);
+            showRecord(1, 5, param);
 
             return false;
         });
-    });
 
 
-    function showRecord(pageNo, pageSize, param) {
-        $.get(ctx+"api/book/list",
-            {
-                author: param.author,
-                name: param.name,
-                isbn: param.isbn,
-                page: pageNo,
-                limit: pageSize
-            },
-            function (result) {
-                //console.log(JSON.stringify(result));
-                // 展示数据
-                fillPage(pageNo, pageSize, result.data);
-                // 渲染分页
-                laypage.render({
-                    elem: $('#pager')
-                    ,count: result.count            //数据总数，从服务端得到
-                    , limit: 5                      //每页显示条数
-                    , limits: [5, 10, 15]
-                    , curr: 1                        //起始页
-                    , groups: 5                      //连续页码个数
-                    , prev: '上一页'                 //上一页文本
-                    , netx: '下一页'                 //下一页文本
-                    , first: 1                      //首页文本
-                    , last: 100                     //尾页文本
-                    , layout: ['prev', 'page', 'next','limit','skip']
-                    //跳转页码时调用
-                    , jump: function (obj, first) { //obj为当前页的属性和方法，第一次加载first为true
-                        //非首次加载 do something
-                        if (!first) {
-                            //调用加载函数加载数据
-                            getPage(obj.curr,obj.limit,param);
+        function showRecord(pageNo, pageSize, param) {
+            $.get(ctx + "api/book/list",
+                {
+                    author: param.author,
+                    name: param.name,
+                    isbn: param.isbn,
+                    page: pageNo,
+                    limit: pageSize
+                },
+                function (result) {
+                    //console.log(JSON.stringify(result));
+                    // 展示数据
+                    fillPage(pageNo, pageSize, result.data);
+                    // 渲染分页
+                    laypage.render({
+                        elem: $('#pager')
+                        , count: result.count            //数据总数，从服务端得到
+                        , limit: 5                      //每页显示条数
+                        , limits: [5, 10, 15]
+                        , curr: 1                        //起始页
+                        , groups: 3                      //连续页码个数
+                        , prev: '上一页'                 //上一页文本
+                        , netx: '下一页'                 //下一页文本
+                        , first: 1                      //首页文本
+                        , last: (result.count)/this.limit                     //尾页文本
+                        , layout: ['prev', 'page', 'next', 'limit', 'skip']
+                        //跳转页码时调用
+                        , jump: function (obj, first) { //obj为当前页的属性和方法，第一次加载first为true
+                            //非首次加载 do something
+                            if (!first) {
+                                //调用加载函数加载数据
+                                getPage(obj.curr, obj.limit, param);
+                            }
                         }
-                    }
-                });
-            }
-        );
-    }
-
-    function getPage(pageNo, pageSize, param) {
-        var result1;
-        $.get(ctx+"api/book/list",
-            {
-                author: param.author,
-                name: param.name,
-                isbn: param.isbn,
-                page: pageNo,
-                limit: pageSize
-            },
-            function (result) {
-                fillPage(pageNo, pageSize, result.data);
-            }
-        );
-    }
-
-    function fillPage(pageNo, pageSize, data) {
-        var start=pageNo==1?1:(pageNo-1)*pageSize+1;
-        $('.items').empty();
-        //加载后台返回的List集合数据
-        var href="";
-        for (var i = 0; i < data.length; i++) {
-            href=ctx+"bookDetail/"+data[i].id;
-            var td = $("<td class='col1'></td>").text(start+i);
-            var td2;
-            var td3 = $("<td class='col2'></td>");
-            var div = $("<div class='itemtitle'><a href='"+href+"' target='_blank'>"+data[i].name+"</a></div>");
-            var tb = $("<table><tr><td class='label1'>作者：</td><td class='content1'>"+data[i].author+"</td>" +
-                "<td class='label1'>ISBN：</td><td class='content'>"+data[i].isbn+"</td></tr></table>")
-            td3.append(div,tb);
-            var tr = $("<tr class='item'></tr>").append(td, td2, td3);
-
-            $('.items').append(tr);
+                    });
+                }
+            );
         }
-    }
+
+        function getPage(pageNo, pageSize, param) {
+            var result1;
+            $.get(ctx + "api/book/list",
+                {
+                    author: param.author,
+                    name: param.name,
+                    isbn: param.isbn,
+                    page: pageNo,
+                    limit: pageSize
+                },
+                function (result) {
+                    fillPage(pageNo, pageSize, result.data);
+                }
+            );
+        }
+
+        function fillPage(pageNo, pageSize, data) {
+            var start = pageNo == 1 ? 1 : (pageNo - 1) * pageSize + 1;
+            $('.items').empty();
+            //加载后台返回的List集合数据
+            var href = "";
+            for (var i = 0; i < data.length; i++) {
+                href = ctx + "bookDetail/" + data[i].id;
+                var td = $("<td class='col1'></td>").text(start + i);
+                var td2;
+                var td3 = $("<td class='col2'></td>");
+                var div = $("<div class='itemtitle'><a href='" + href + "' target='_blank'>" + data[i].name + "</a></div>");
+                var tb = $("<table><tr><td class='label1'>作者：</td>" +
+                    "<td class='content1'>" + data[i].author + "</td>" +
+                    "<td class='label1' >ISBN：</td>" +
+                    "<td class='content' style='width: auto'>" + data[i].isbn + "</td></tr></table>")
+                td3.append(div, tb);
+                var tr = $("<tr class='item'></tr>").append(td, td2, td3);
+                $('.items').append(tr);
+            }
+        };
+    });
 </script>
 </body>
 </html>

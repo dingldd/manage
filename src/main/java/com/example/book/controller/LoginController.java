@@ -18,7 +18,6 @@ public class LoginController {
     @Resource
     public UserService userService;
 
-
     @RequestMapping("/admin")
     public String login(HttpServletRequest request ,
                         @RequestParam("username") String username,
@@ -35,4 +34,10 @@ public class LoginController {
             return "login";
         }
     }
+    @RequestMapping("/signOut")
+    public String signOut(HttpSession session){
+        session.invalidate();
+        return "index";
+    }
+
 }

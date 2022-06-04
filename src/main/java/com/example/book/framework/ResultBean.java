@@ -4,6 +4,7 @@ package com.example.book.framework;
  * 响应消息体
  */
 public class ResultBean<T> {
+
     /**响应编码*/
     private int code;
     /**响应消息*/
@@ -28,7 +29,6 @@ public class ResultBean<T> {
     public String toString() {
         return "R [code=" + code + ", msg=" + msg + ", count=" + count + ", data=" + data + "]";
     }
-
     public int getCode() {
         return code;
     }

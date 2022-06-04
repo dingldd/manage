@@ -13,14 +13,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
     SessionTimeoutInterceptor sessionTimeoutInterceptor;
-
     /**
      * 释放静态资源
      * @param registry
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/**");
         registry.addResourceHandler("/assets/ckeditor/**").
                 addResourceLocations("classpath:/static/assets/ckeditor/").
                 setCachePeriod(2592000);
@@ -48,7 +47,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(sessionTimeoutInterceptor).addPathPatterns("/**").
-                excludePathPatterns("/api/book/list","/bookDetail/*","/","/index","/login","/admin","/static/**");
+                excludePathPatterns("/api/book/list","/bookDetail/*"
+                        ,"/","/index","/login","/admin"
+                        ,"/css/**","/img/**","/js/**","/layui/**"
+                        ,"/static/**");
     }
 
 }

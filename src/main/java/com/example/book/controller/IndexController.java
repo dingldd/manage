@@ -19,7 +19,6 @@ public class IndexController {
     @Autowired
     BorrowService borrowService;
 
-
     @GetMapping("/bookEdit/{id}")
     public String bookEdit(@PathVariable Integer id, Model model){
         Book book = bookService.get(id);

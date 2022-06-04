@@ -22,7 +22,7 @@ public class DateUtil {
      * @return 最近几天的日期数组
      */
     public static List<String> getDaysBetwwen(int days){
-        List<String> dayss = new ArrayList<>();
+        List<String> dayss = new ArrayList();
         Calendar start = Calendar.getInstance();
         start.setTime(getDateAdd(days));
         long startTime = start.getTimeInMillis();

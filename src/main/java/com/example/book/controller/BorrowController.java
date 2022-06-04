@@ -45,7 +45,7 @@ public class BorrowController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer limit) {
 
-        Map<String, Object> param = new HashMap<>(16);
+        Map<String, Object> param = new HashMap(16);
 
         // 计算起始行号
         int offset = (page - 1) * limit;
@@ -63,13 +63,13 @@ public class BorrowController {
         // 获取当前页结果集
         List<BorrowVO> entities = borrowService.getPageResult(param);
 
-        return new ResultBean<>(0, "查询成功", totalRows, entities);
+        return new ResultBean(0, "查询成功", totalRows, entities);
 
     }
     @PostMapping("/show")
     public String show(@RequestBody BorrowVO entity) {
         Integer id = entity.getId();
-        Map<String, Object> param = new HashMap<>(16);
+        Map<String, Object> param = new HashMap(16);
         param.put("bookId", entity.getBookId());
         param.put("readerId", entity.getReaderId());
         String name=readerService.get(entity.getReaderId()).getName();
@@ -92,7 +92,7 @@ public class BorrowController {
         if (id != null) {
             borrowService.modify(entity);
         } else {
-            Map<String, Object> param = new HashMap<>(16);
+            Map<String, Object> param = new HashMap(16);
             param.put("bookId", entity.getBookId());
             param.put("readerId", entity.getReaderId());
             //1.检查读者编号是否存在，且是否有罚金
@@ -135,24 +135,7 @@ public class BorrowController {
         return ResultUtil.ok();
     }
 
-//    @PostMapping("/return")
-//    @Transactional(rollbackFor=Exception.class)
-//    public Result<String> returnBook(@RequestBody Integer[] ids) {
-//        // 1.增加图书库存
-//        Book entity;
-//        for (Integer id: ids) {
-//            entity = bookService.getById(borrowService.get(id).getBookId());
-//            entity.setLeftNumber(entity.getLeftNumber()+1);
-//            bookService.modify(entity);
-//        }
-//        // 2.更新借阅状态
-//        Map<String,Object> param = new HashMap<>(16);
-//        param.put("ids", ids);
-//        param.put("borrowStatus",1);
-//        borrowService.returnBook(param);
-//
-//        return ResultUtil.ok();
-//    }
+
     @PostMapping("/return")
     public Result<String> returnBook(@RequestBody Integer[] ids){
         Book book = new Book();
@@ -162,7 +145,7 @@ public class BorrowController {
             book.setLeftNumber(book1.getLeftNumber()+1);
             bookService.modify(book);
         }
-        HashMap<String, Object> hashMap = new HashMap<>();
+        HashMap<String, Object> hashMap = new HashMap();
         hashMap.put("ids",ids);
         hashMap.put("borrowStatus",1);
         borrowService.returnBook(hashMap);
@@ -180,7 +163,7 @@ public class BorrowController {
 
     @GetMapping("/getBorrowStat")
     public Result<Map<String,Object>> getBorrowStat(){
-        Map<String,Object> map = new HashMap<>(16);
+        Map<String,Object> map = new HashMap(16);
         List<String> days = DateUtil.getDaysBetwwen(6);
 
         map.put("columnName",days);
@@ -190,8 +173,8 @@ public class BorrowController {
         returnVO.setName("还");
         borrowVO.setType("bar");
         returnVO.setType("bar");
-        List<Integer> borrowData = new ArrayList<>();
-        List<Integer> returnData = new ArrayList<>();
+        List<Integer> borrowData = new ArrayList();
+        List<Integer> returnData = new ArrayList();
         for (String day:days) {
             borrowData.add(borrowService.getBorrowCount(day));
             returnData.add(borrowService.getReturnCount(day));
@@ -199,7 +182,7 @@ public class BorrowController {
         borrowVO.setData(borrowData);
         returnVO.setData(returnData);
 
-        List<BorrowStatVO> list = new ArrayList<>();
+        List<BorrowStatVO> list = new ArrayList();
         list.add(borrowVO);
         list.add(returnVO);
 

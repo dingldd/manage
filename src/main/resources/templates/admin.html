@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>图书管理系统</title>
-    <link rel="stylesheet" href="/static/layui/css/layui.css" th:href="@{/static/layui/css/layui.css}">
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet">
 
     <style type="text/css">
         .rightmenu{
@@ -40,36 +40,10 @@
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
         <div class="layui-logo">图书管理系统</div>
-        <!-- 头部区域（可配合layui已有的水平导航） -->
-        <!--<ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item">
-                <a href="">控制台</a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="">商品管理</a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="">用户</a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">其它系统</a>
-                <dl class="layui-nav-child">
-                    <dd>
-                        <a href="">邮件管理</a>
-                    </dd>
-                    <dd>
-                        <a href="">消息管理</a>
-                    </dd>
-                    <dd>
-                        <a href="">授权管理</a>
-                    </dd>
-                </dl>
-            </li>
-        </ul>-->
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:;">
-                    <img src="static/img/admin.jpg" class="layui-nav-img"> <span class="badge"></span>
+                    <img th:src="@{/img/admin.jpg}" class="layui-nav-img"> <span class="badge"></span>
                 </a>
                 <dl class="layui-nav-child">
                     <dd>
@@ -78,7 +52,7 @@
                 </dl>
             </li>
             <li class="layui-nav-item">
-                <a href="" th:href="@{/login}">退出</a>
+                <a href="" th:href="@{/signOut}">退出</a>
             </li>
         </ul>
     </div>
@@ -116,18 +90,17 @@
 
     <div class="layui-body">
         <!-- 内容主体区域 -->
-        <div style="padding: 5px;">
+        <div style="padding: 5px;" >
             <div class="layui-tab" lay-filter="mytab" lay-allowClose="true">
-                <ul class="layui-tab-title">
-                </ul>
+                <ul class="layui-tab-title"></ul>
 
-                <ul class="rightmenu" style="display: none;position: absolute;">
+                <ul class="rightmenu" style="display: none;position: absolute;" >
                     <li class="context-menu-item" data-type="closeThis"><span>关闭标签</span></li>
                     <li class="context-menu-item"  data-type="closeOthers"><span>关闭其他</span></li>
                     <li class="context-menu-item"  data-type="closeAll"><span>关闭全部</span></li>
                 </ul>
 
-                <div class="layui-tab-content" style="min-height: 800px;border: none">
+                <div class="layui-tab-content" style="min-height: 100px;border: none">
                 </div>
             </div>
         </div>
@@ -171,8 +144,8 @@
 </div>
 
 
-<script src="/static/js/jquery-1.11.3.min.js" th:src="@{/static/js/jquery-1.11.3.min.js}"></script>
-<script src="/static/layui/layui.all.js" th:src="@{/static/layui/layui.all.js}"></script>
+<script th:src="@{/js/jquery-1.11.3.min.js}"></script>
+<script th:src="@{/layui/layui.all.js}"></script>
 <!--<script src="/static/js/nav.js"></script>-->
 
 <!--ctx-->
@@ -198,7 +171,7 @@
                 //关于tabAdd的方法所传入的参数可看layui的开发文档中基础方法部分
                 element.tabAdd('mytab', {
                     title: name,
-                    content: '<iframe data-frameid="'+id+'" scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:99%;"></iframe>',
+                    content: '<iframe data-frameid="'+id+'" scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;"></iframe>',
                     id: id //规定好的id
                 })
                 CustomRightClick(id); //给tab绑定右击事件
@@ -300,13 +273,13 @@
             $('.rightmenu').hide(); //最后再隐藏右键菜单
         })
         function FrameWH() {
-            var h = $(window).height() -41- 10 - 60 -10-44 -10;
+            var h = $(window).height()-200;
             $("iframe").css("height",h+"px");
-        }
+        };
 
         $(window).resize(function () {
             FrameWH();
-        })
+        });
     });
 
 

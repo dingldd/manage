@@ -15,8 +15,6 @@ public class BookService {
     @Resource
     public BookMapper bookMapper;
 
-
-
     public void add(Book book) {
         bookMapper.insert(book);
     }
